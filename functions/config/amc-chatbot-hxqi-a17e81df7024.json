@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "amc-chatbot-hxqi",
+  "private_key_id": "a17e81df7024c7e37895d3ace81c716ad0cb1b2b",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCVJLUssK8R/+e3\n3+0eesuANFVp6KZjgOb8rh5ykMJA7QORcS1vf86Zo8A2FbQ72teFGfvV7L6OJnqq\nOK/OcoAApDAnOWe8MYajA7eUccqWbVPIXIuh8LFGsW5CzeOINu8DD1WdGOoB8CZh\nLXw6wkdm3GVLQIUZluXInigl590HfuLzMVy+PYp+Khj0sA1d36W82ln1cbfSXhV7\nxtEO08aJPsOSiFw9xUnrHAld2705jQsggb4hsuF5TWoNWoR5lDy8ZwxpjNDcdVf2\nOcmphb6hQEpCFpaL03nkpIMZaIqbDAdEIs3zvRpSS1FMRCoJ8ZPHELxx4TFmiwme\np0az5enzAgMBAAECggEAH8jt77NL7EsciBxp/XfwDMeaeHLDmysqjylQhdwB+jJI\n82MqarvTPP0gBqbDfYobKluqRyIoTkU3GTXxic7vJrPXK1TZncr0RaOSKUnDAiIU\nm/vVKlMQhN9lf0k/t5T1hTJsbYmUvYr/svAtrJwg+XP5BnueoiB9oi7KoaFzgpgd\nv9XOppLvAtxOksoDG0GYmZIAcer0Fr84/PXUT8eFossMqHDw98WhILPlefPW5uIX\nssJzTbeoHscL3mg5XE5qJHTxIACYuwK/W8YZoYU22prdHZvQvu0WQf96YI6V199+\n4AoOhNxM/kxkN9IGeHQeAe0AN2WXjqi6y0BnIXtisQKBgQDOLaTT0cIFat8yQY1K\nLe8Xa/i/mZNabxsnlq4NEgUYGAE1OyxUZHUsQrbknIe5MPSQB0244sexWKg2eDZZ\nuAdHnbl4wRtpQrK2+X3yRaTjdTtscnPZnFKtE37ymh+81JE5UgHQj7kDgxSHEcoF\nXHcEWOul+bFMeL9q/iHJwVBYyQKBgQC5LtahOI4c6nffVGtm4L7xMokvGXlV7vC/\nTKiRvJ9d6ungUUgZgT/4TCB67BVxiR48EWki9DFDLn+5r9z2oyD0jdKzVNThcK0o\nr1vmgAjOaxgP29NgYRcqyaxilSbHKyLLKxitNAQOHExj6ZsAbr8VafKItNKZ1KlD\nUA3LEUtG2wKBgQDL8Dge0VeiNjEqK88O9dqOh11YYBdyF357rT7ibNWfHHdtaOeT\nXn7MVf1EqlRR6Uuvf5nwbFlsYa6ZmlTgb/i7bRb9i72KY9AUzzo2P4828kniHl/b\nexYIXsVuQOdtx7ESSrzCyLcP80OFyyHSJcEQCsiktxQZ+UIWGePgBhhsiQKBgBMK\nuPE9EofwqEDjumOKyrecnbSlJu/qMQFKza6mubB7nm79jK9qtfw/P7vEGPRiyCQf\nGjOI7qPc3S9n4Q3Pem0LRFZCa91+q5+aYJXUJpOrOX8v+I1ZjntM35gHhERIsDw6\nA0CUL7KPwF8pv1GNEcMO8OyTw3AkCP+t9K0j6xyvAoGAKriNiUZNXJSX/ZW6xXUj\nOhCYgzf7fn3Y/F9eTYanjCVBj3geZyzyUKoPDm+vJbTgoFMQyT/BzKZd4dn804b0\ng+mRvEqqmZAsDhwNfWjtvO8+bw4AjM4Z+WLp4HFperEotHizopVZN6qBsev3Edma\nI8uGygZQ+IDCoZyMvRIlfYg=\n-----END PRIVATE KEY-----\n",
+  "client_email": "amc-cuenta-servicio@amc-chatbot-hxqi.iam.gserviceaccount.com",
+  "client_id": "103664503332935490952",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/amc-cuenta-servicio%40amc-chatbot-hxqi.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
