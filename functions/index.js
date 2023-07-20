@@ -19,9 +19,39 @@ const path = require("path");
 const {WebhookClient} = require("dialogflow-fulfillment");
 const serviceAccount = require("./config/amc-chatbot-hxqi-a17e81df7024.json");
 const admin = require("firebase-admin");
+// const google = require("googleapis");
+
+// Variables locales
+const sessionVars = {};
 
 // Configuración del servidor
 const server = express();
+const PORT = process.env.PORT || 8000;
+
+// *Google Calendar*
+// const oauth2Client = new google.auth.OAuth2(
+//     process.env.CLIENT_ID,
+//     process.env.CLIENT_SECRET,
+//     process.env.REDIRECT_URL,
+// );
+
+// const scopes = ["https://www.googleapis.com/auth/calendar"];
+
+// server.get("/google", (req, res) => {
+//   const url = oauth2Client.generateAuthUrl({
+//     access_type: "offline",
+//     scope: scopes,
+//   });
+
+//   res.redirect(url);
+// });
+
+// server.get("/google/redirect", (req, res) => {
+//   res.send("It's working!");
+// });
+
+// *Google Calendar 16:44*
+
 server.use(express.urlencoded({extended: true}));
 server.use(express.json());
 server.use("/img", express.static(path.join(__dirname, "/img")));
@@ -46,8 +76,20 @@ server.post("/amcbot", (req, res) => {
 
   // Default Welcome Intent
   function welcome(agent) {
-    agent.add("Saludos cordiales de parte del Dr. Luis René Arias Villarroel. Soy un asistente virtual listo para resolver sus dudas.");
+    agent.add("Saludos cordiales de parte del Dr. Luis René Arias Villarroel. Soy un asistente virtual listo para ayudarle a sus dudas.");
     agent.add("Si tiene alguna pregunta sobre el tratamiento, información sobre nuestros servicios o desea agendar una cita, Estoy para servirle.");
+    agent.add("¿De qué ciudad nos escribe?");
+
+    agent.context.set({
+      name: "session-vars",
+      lifespan: 50,
+    });
+  }
+
+  // ciudad
+  function ciudad(agent) {
+    agent.add("Muchas gracias, ¿cómo puedo ayudarle?");
+    sessionVars.ciudad = agent.parameters["location"].city;
   }
 
   // Default Fallback Intent
@@ -57,6 +99,7 @@ server.post("/amcbot", (req, res) => {
 
   const intentMap = new Map();
   intentMap.set("Default Welcome Intent", welcome);
+  intentMap.set("ciudad", ciudad);
   intentMap.set("Default Fallback Intent", fallback);
 
   agent.handleRequest(intentMap);
@@ -68,7 +111,7 @@ if (production) {
   exports.amcbot = onRequest(server);
 } else {
   // Para ejecutar el servidor en local y hacer pruebas
-  server.listen(process.env.PORT || 8000, () => {
+  server.listen(PORT, () => {
     console.log("Servidor local funcionando!");
   });
 }
