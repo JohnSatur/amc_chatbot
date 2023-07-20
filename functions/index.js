@@ -22,7 +22,7 @@ const admin = require("firebase-admin");
 // const google = require("googleapis");
 
 // local
-const {algunaOtraPregunta, getRandomResponse} = require("./response");
+const {algunaOtraPregunta, getRandomResponse, sendEmail} = require("./response");
 const sessionVars = {};
 
 // Configuración del servidor
@@ -62,9 +62,13 @@ try {
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
   });
+  console.log("Conectado a la BD");
 } catch (error) {
   console.log("Error de inicialización de la cuenta de servicio de Firebase: " + error);
 }
+
+// Base de datos
+// const db = admin.firestore();
 
 // Si alguien quiere acceder al directorio raiz (método GET)
 server.get("/", (req, res) => {
@@ -163,8 +167,7 @@ server.post("/amcbot", (req, res) => {
 
   // Dar precio de acuerdo al lugar de donde nos escriba
   function informesPrecioConsulta(agent) {
-    agent.add("Un momento, le comunico con alguien para que le de informes sobre el precio de la consulta.");
-    agent.add(algunaOtraPregunta());
+    agent.add("La consulta que incluye un estudio Doppler y de Transiluminación tiene un costo de $750 MXN.");
   }
 
   function informesQueIncluyeConsulta(agent) {
@@ -213,6 +216,25 @@ server.post("/amcbot", (req, res) => {
     agent.add("Por favor, elija una clínica: ");
   }
 
+  // Enviar correo al doctor para notificar que alguién quiere agendar cita
+  async function agendarCita(agent) {
+    const mailOptions = {
+      from: "animashorse3@hotmail.com",
+      to: "fastolf_@hotmail.com",
+      subject: "Arias Medical Chatbot - Notificación",
+      html: `<p>Paciente en la espera para agendar cita</p>`,
+    };
+
+    try {
+      const respuestaCorreo = await sendEmail(mailOptions);
+      agent.add(respuestaCorreo);
+    } catch (error) {
+      agent.add("Una disculpa, no pude contactar con el doctor. ¿Puedo ayudarle en algo más?");
+
+      console.log(error);
+    }
+  }
+
   // Default Fallback Intent
   function fallback(agent) {
     agent.add("Una disculpa, no le entendí bien. ¿Podría repetírmelo?");
@@ -244,6 +266,7 @@ server.post("/amcbot", (req, res) => {
   intentMap.set("informesTratamiento", informesTratamiento);
   intentMap.set("informesTriggerPoint", informesTriggerPoint);
   intentMap.set("informesUbicacionClinicas", informesUbicacionClinicas);
+  intentMap.set("agendarCita", agendarCita);
   intentMap.set("Default Fallback Intent", fallback);
 
   agent.handleRequest(intentMap);
