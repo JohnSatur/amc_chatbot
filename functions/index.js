@@ -21,7 +21,8 @@ const serviceAccount = require("./config/amc-chatbot-hxqi-a17e81df7024.json");
 const admin = require("firebase-admin");
 // const google = require("googleapis");
 
-// Variables locales
+// local
+const {algunaOtraPregunta} = require("./response");
 const sessionVars = {};
 
 // Configuración del servidor
@@ -92,6 +93,12 @@ server.post("/amcbot", (req, res) => {
     sessionVars.ciudad = agent.parameters["location"].city;
   }
 
+  function dudasTratamiento(agent) {
+    agent.add("El tratamiento que realizamos en Arias Medical Clinic es la escleroterapia, que consiste en la aplicación de una espuma intravenosa que permite la reabsorción de las venas varicosas.");
+    agent.add("El tratamiento no es doloroso, no requiere cirugía ni reposo y es mínimamente invasivo.");
+    agent.add(algunaOtraPregunta());
+  }
+
   // Default Fallback Intent
   function fallback(agent) {
     agent.add("Una disculpa, no le entendí bien. ¿Podría repetírmelo?");
@@ -100,12 +107,13 @@ server.post("/amcbot", (req, res) => {
   const intentMap = new Map();
   intentMap.set("Default Welcome Intent", welcome);
   intentMap.set("ciudad", ciudad);
+  intentMap.set("dudas_tratamiento", dudasTratamiento);
   intentMap.set("Default Fallback Intent", fallback);
 
   agent.handleRequest(intentMap);
 });
 
-const production = true;
+const production = false;
 
 if (production) {
   exports.amcbot = onRequest(server);
