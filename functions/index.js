@@ -81,7 +81,7 @@ server.post("/amcbot", (req, res) => {
 
   // Default Welcome Intent
   function welcome(agent) {
-    agent.add("Saludos cordiales de parte del Dr. Luis René Arias Villarroel. Soy un asistente virtual listo para ayudarle a sus dudas.");
+    agent.add("Saludos cordiales de parte de Arias Medical Clinic. Soy un asistente virtual listo para ayudarle a resolver sus dudas.");
     agent.add("Si tiene alguna pregunta sobre el tratamiento, información sobre nuestros servicios o desea agendar una cita, Estoy para servirle.");
     agent.add("¿De qué ciudad nos escribe?");
 
@@ -96,10 +96,60 @@ server.post("/amcbot", (req, res) => {
     sessionVars.ciudad = agent.parameters["location"].city;
   }
 
+  function contactarHumano(agent) {
+    agent.add("Con gusto, en un momento una persona se pondrá en contacto con usted.");
+  }
+
   function dudasTratamiento(agent) {
-    agent.add("El tratamiento que realizamos en Arias Medical Clinic es la escleroterapia, que consiste en la aplicación de una espuma intravenosa que permite la reabsorción de las venas varicosas.");
-    agent.add("El tratamiento no es doloroso, no requiere cirugía ni reposo y es mínimamente invasivo.");
+    agent.add("En Arias Medical Clinic hacemos tratamientos de:\n**1.** Rehabilitación vascular\n**2.** Rehabilitación de columna\n**3.** Flebología\n**4.** Linfología");
     agent.add(algunaOtraPregunta());
+  }
+
+  function dolorDeColumna(agent) {
+    const alturaEspalda = agent.parameters["alturaEspalda"];
+
+    agent.add("Entiendo, así que tiene dolor en la zona " + alturaEspalda + ".");
+    agent.add("¿Tiene usted radiografías? (tienen que ser de al menos 30 días)");
+
+    agent.context.set({
+      name: "preguntar-por-radiografias",
+      lifespan: 3,
+    });
+  }
+
+  function dolorDeColumnaRadiografiasVigentes(agent) {
+    agent.context.get("preguntar-por-radiografias");
+
+    agent.add("Perfecto. ¿Ha sufrido usted un accidente recientemente?");
+
+    agent.context.set({
+      name: "preguntar-por-accidente",
+      lifespan: 3,
+    });
+  }
+
+  function dolorDeColumnaNoRadiografiasVigentes(agent) {
+    agent.context.get("preguntar-por-radiografias");
+
+    agent.add("Será necesario que saque radiografías.");
+    agent.add("¿Ha sufrido usted un accidente recientemente?");
+
+    agent.context.set({
+      name: "preguntar-por-accidente",
+      lifespan: 3,
+    });
+  }
+
+  function dolorDeColumnaAccidente(agent) {
+    agent.add("Entiendo. En un momento el doctor se pondrá en contacto con usted para dar seguimiento a su caso.");
+  }
+
+  function dolorDeColumnaNoAccidente(agent) {
+    agent.add("Entiendo. En un momento el doctor se pondrá en contacto con usted para dar seguimiento a su caso.");
+  }
+
+  function informesGeneral(agent) {
+    agent.add("En ARIAS MEDICAL CLINIC atendemos las siguientes áreas:\n1. Flebología y Linfología para pacientes con varices, úlcera varicosa y linfedema.\n2.Rehabilitación y manejo ambulatorio en pacientes con problemas de columna como: lumbalgia, ciatica, dorsalgia, cervicalgia así como  también  pacientes con dolor de cuello y adormecimiento en las manos.\n3.Rehabilitación física.");
   }
 
   function informesCausasVarices(agent) {
@@ -120,7 +170,13 @@ server.post("/amcbot", (req, res) => {
   function informesEscleroterapia(agent) {
     agent.add("La escleroterapia consiste en la aplicación de una espuma intravenosa que permite la reabsorción de la vena anormal.");
     agent.add("A continuación le dejo un enlace para que pueda visualizar como funciona el tratamiento.");
-    agent.add("**https://www.facebook.com/reel/1334731977322595**");
+    agent.add("https://www.facebook.com/reel/1334731977322595");
+    agent.add(algunaOtraPregunta());
+  }
+
+  function informesDolorEscleroterapia(agent) {
+    agent.context.get("escleroterapia");
+    agent.add("El dolor es mínimo, pero los resultados son realmente gratificantes.");
     agent.add(algunaOtraPregunta());
   }
 
@@ -151,13 +207,18 @@ server.post("/amcbot", (req, res) => {
   }
 
   function informesNumeroSesiones(agent) {
-    agent.add("Cada caso es diferentes, todo depende del resultado de su evaluación con el médico.");
+    agent.add("Cada caso es diferente, todo depende del resultado de su evaluación con el médico.");
     agent.add(algunaOtraPregunta());
   }
 
   function informesOpcionesTratamientoVarices(agent) {
     agent.add("En Arias Medical Clinic trabajamos con Escleroterapia, que consiste en la aplicación de una espuma intravenosa que permite la reabsorción de las venas varicosas.");
     agent.add(algunaOtraPregunta());
+
+    agent.context.set({
+      name: "escleroterapia",
+      lifespan: 5,
+    });
   }
 
   function informesPosibilidadPrevenirVarices(agent) {
@@ -167,7 +228,8 @@ server.post("/amcbot", (req, res) => {
 
   // Dar precio de acuerdo al lugar de donde nos escriba
   function informesPrecioConsulta(agent) {
-    agent.add("La consulta que incluye un estudio Doppler y de Transiluminación tiene un costo de $750 MXN.");
+    agent.add("El precio de la consulta es de $750 MXN. Incluye un estudio Doppler y de Transiluminación.");
+    agent.add("Le gustaría agendar una cita");
   }
 
   function informesQueIncluyeConsulta(agent) {
@@ -191,18 +253,13 @@ server.post("/amcbot", (req, res) => {
   }
 
   function informesTiempoResultados(agent) {
+    agent.add("El resultado se ve en tres días después de la primera sesión.");
     agent.add("El tiempo que tardan en desaparecer las várices por completo puede variar de una persona a otra.");
-    agent.add("En la mayoría de los casos, las varices tratadas con escleroterapia comienzan a desvanecerse en unas pocas semanas.");
     agent.add(algunaOtraPregunta());
   }
 
   function informesTransiluminacion(agent) {
     agent.add("Transiluminación es el estudio que se hace con la ayuda de una lámpara especial que nos permite hacer un mapeo profundo de la vena.");
-    agent.add(algunaOtraPregunta());
-  }
-
-  function informesTratamiento(agent) {
-    agent.add("El tratamiento que realizamos se llama escleroterapia, consiste en la aplicación de una espuma intravenosa que permite la reabsorción de la vena anormal.");
     agent.add(algunaOtraPregunta());
   }
 
@@ -213,7 +270,48 @@ server.post("/amcbot", (req, res) => {
 
   // Mostrar una lista de las clínicas y devolver la ubicación con Google Maps de acuerdo a eso
   function informesUbicacionClinicas(agent) {
-    agent.add("Por favor, elija una clínica: ");
+    agent.add("Por favor, seleccione una clínica: ");
+
+    agent.context.set({
+      name: "esperando-clinica",
+      lifespan: 2,
+    });
+  }
+
+  function ubicacionBoca(agent) {
+    agent.context.get("esperando-clinica");
+
+    agent.add("Plaza Santa Ana, Local 15, Boca del Río, Ver.");
+    agent.add("Frente a plaza Américas");
+    agent.add("https://maps.app.goo.gl/DHaEDFQAEhkcro1J8");
+  }
+
+  function ubicacionXalapa(agent) {
+    agent.context.get("esperando-clinica");
+
+    agent.add("C. Coatzacoalcos, C. Priv. de las Palmas 21, Esquina, Veracruz, 91020 Xalapa");
+    agent.add("https://goo.gl/maps/Nqre41X3LvH1fQ3Q7");
+  }
+
+  function ubicacionPuebla(agent) {
+    agent.context.get("esperando-clinica");
+
+    agent.add("Anillo Perif. Ecológico 3507 Torre 1 piso 9 consultorio 917 Tlaxcalancingo, 72821 Puebla, Pue");
+    agent.add("https://goo.gl/maps/XCFNNwunKBFHp8Hr5");
+  }
+
+  function especialidadLumbalgia(agent) {
+    agent.add("El doctor Arias es un médico cirujano con doctorado en manejo de columna.");
+  }
+
+  function pacienteConPadecimientoValoracion(agent) {
+    agent.add("Es necesario que acuda a valoración.");
+    agent.add("¿Gusta que se le agende una cita?");
+
+    agent.context.set({
+      name: "confirmacion-agendar-cita",
+      lifespan: 3,
+    });
   }
 
   // Enviar correo al doctor para notificar que alguién quiere agendar cita
@@ -243,11 +341,19 @@ server.post("/amcbot", (req, res) => {
   const intentMap = new Map();
   intentMap.set("Default Welcome Intent", welcome);
   intentMap.set("ciudad", ciudad);
+  intentMap.set("contactarHumano", contactarHumano);
   intentMap.set("dudasTratamiento", dudasTratamiento);
+  intentMap.set("dolorDeColumna", dolorDeColumna);
+  intentMap.set("dolorDeColumna - radiografiasVigentes", dolorDeColumnaRadiografiasVigentes);
+  intentMap.set("dolorDeColumna - noRadiografiasVigentes", dolorDeColumnaNoRadiografiasVigentes);
+  intentMap.set("dolorDeColumna - accidente", dolorDeColumnaAccidente);
+  intentMap.set("dolorDeColumna - noAccidente", dolorDeColumnaNoAccidente);
+  intentMap.set("informesGeneral", informesGeneral);
   intentMap.set("informesCausasVarices", informesCausasVarices);
   intentMap.set("informesComplicacionesVaricesNoTratadas", informesComplicacionesVaricesNoTratadas);
   intentMap.set("informesContraindicaciones", informesContraindicaciones);
   intentMap.set("informesEscleroterapia", informesEscleroterapia);
+  intentMap.set("informesDolorEscleroterapia", informesDolorEscleroterapia);
   intentMap.set("informesEspecialidadMedicos", informesEspecialidadMedicos);
   intentMap.set("informesEstudioDoppler", informesEstudioDoppler);
   intentMap.set("informesEstudiosParaValoracionDeLumbalgia", informesEstudiosParaValoracionDeLumbalgia);
@@ -263,9 +369,13 @@ server.post("/amcbot", (req, res) => {
   intentMap.set("informesSintomasVarices", informesSintomasVarices);
   intentMap.set("informesTiempoResultados", informesTiempoResultados);
   intentMap.set("informesTransiluminacion", informesTransiluminacion);
-  intentMap.set("informesTratamiento", informesTratamiento);
   intentMap.set("informesTriggerPoint", informesTriggerPoint);
   intentMap.set("informesUbicacionClinicas", informesUbicacionClinicas);
+  intentMap.set("informesUbicacionClinicas - boca", ubicacionBoca);
+  intentMap.set("informesUbicacionClinicas - xalapa", ubicacionXalapa);
+  intentMap.set("informesUbicacionClinicas - puebla", ubicacionPuebla);
+  intentMap.set("especialidadLumbalgia", especialidadLumbalgia);
+  intentMap.set("pacienteConPadecimientoValoracion", pacienteConPadecimientoValoracion);
   intentMap.set("agendarCita", agendarCita);
   intentMap.set("Default Fallback Intent", fallback);
 
