@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 /* eslint-disable require-jsdoc */
 "use strict";
-//ola mundo desde git
+// ola mundo desde git
 
 /**
  * Import function triggers from their respective submodules:
@@ -23,7 +23,7 @@ const admin = require("firebase-admin");
 // const google = require("googleapis");
 
 // local
-const {algunaOtraPregunta, getRandomResponse, sendEmail} = require("./response");
+const {algunaOtraPregunta, getRandomResponse} = require("./response");
 const sessionVars = {};
 
 // Configuración del servidor
@@ -276,7 +276,7 @@ server.post("/amcbot", (req, res) => {
 
   // Mostrar una lista de las clínicas y devolver la ubicación con Google Maps de acuerdo a eso
   function informesUbicacionClinicas(agent) {
-    agent.add("Por favor, seleccione una clínica: ");
+    agent.add("Por favor, seleccione una clínica: \n 1-Xalapa\n 2-Boca\n 3-Puebla");
 
     agent.context.set({
       name: "esperando-clinica",
@@ -333,22 +333,9 @@ server.post("/amcbot", (req, res) => {
   }
 
   // Enviar correo al doctor para notificar que alguién quiere agendar cita
-  async function agendarCita(agent) {
-    const mailOptions = {
-      from: "animashorse3@hotmail.com",
-      to: "fastolf_@hotmail.com",
-      subject: "Arias Medical Chatbot - Notificación",
-      html: `<p>Paciente en la espera para agendar cita</p>`,
-    };
-
-    try {
-      const respuestaCorreo = await sendEmail(mailOptions);
-      agent.add(respuestaCorreo);
-    } catch (error) {
-      agent.add("Una disculpa, no pude contactar con el doctor. ¿Puedo ayudarle en algo más?");
-
-      console.log(error);
-    }
+  function agendarCita(agent) {
+    agent.add("Claro que sí. Para hablar con el doctor, por favor ingrese al siguiente enlace: ");
+    agent.add("https://api.whatsapp.com/send?phone=5212284982291&text=Necesito%20asesor%C3%ADa");
   }
 
   // Default Fallback Intent
@@ -402,7 +389,7 @@ server.post("/amcbot", (req, res) => {
   agent.handleRequest(intentMap);
 });
 
-const production = true;
+const production = true; // aqui nodemon
 
 if (production) {
   exports.amcbot = onRequest(server);
