@@ -79,6 +79,11 @@ server.get("/", (req, res) => {
 server.post("/amcbot", (req, res) => {
   const agent = new WebhookClient({request: req, response: res});
 
+  function PruebaWindowsLocation(agent) {
+    agent.add("Claro que sí. Para hablar con el doctor, por favor ingrese al siguiente enlace: ");
+    agent.add("https://api.whatsapp.com/send?phone=5212284982291&text=Necesito%20asesor%C3%ADa");
+  }
+
   // Default Welcome Intent
   function welcome(agent) {
     agent.add("Saludos cordiales de parte de Arias Medical Clinic. Soy un asistente virtual listo para ayudarle a resolver sus dudas.");
@@ -314,6 +319,18 @@ server.post("/amcbot", (req, res) => {
     });
   }
 
+  function padecimientosNoAtendibles(agent) {
+    const padecimiento = agent.parameters["padecimientosNoAtendibles"];
+
+    if (padecimiento == "varicocele") {
+      agent.add("Si usted sufre de varicocele, necesita acudir a un urólogo.");
+    } else if (padecimiento == "hemorroides") {
+      agent.add("Si usted sufre de hemorroides, le sugiero que acuda al proctólogo.");
+    } else {
+      agent.add("Disculpe, no le entendí bien...");
+    }
+  }
+
   // Enviar correo al doctor para notificar que alguién quiere agendar cita
   async function agendarCita(agent) {
     const mailOptions = {
@@ -339,6 +356,7 @@ server.post("/amcbot", (req, res) => {
   }
 
   const intentMap = new Map();
+  intentMap.set("PruebaWindowsLocation", PruebaWindowsLocation);
   intentMap.set("Default Welcome Intent", welcome);
   intentMap.set("ciudad", ciudad);
   intentMap.set("contactarHumano", contactarHumano);
@@ -376,6 +394,7 @@ server.post("/amcbot", (req, res) => {
   intentMap.set("informesUbicacionClinicas - puebla", ubicacionPuebla);
   intentMap.set("especialidadLumbalgia", especialidadLumbalgia);
   intentMap.set("pacienteConPadecimientoValoracion", pacienteConPadecimientoValoracion);
+  intentMap.set("padecimientosNoAtendibles", padecimientosNoAtendibles);
   intentMap.set("agendarCita", agendarCita);
   intentMap.set("Default Fallback Intent", fallback);
 

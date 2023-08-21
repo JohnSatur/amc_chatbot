@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
   port: 587, // Puerto para SMTP de Hotmail/Outlook (587 para TLS o 465 para SSL)
   secure: false, // true para 465, false para otros puertos (587)
   auth: {
-    user: "animashorse3@gmail.com", // Tu dirección de correo de Hotmail/Outlook
+    user: "animashorse3@hotmail.com", // Tu dirección de correo de Hotmail/Outlook
     pass: "220897C@rlos", // Tu contraseña de Hotmail/Outlook
   },
   tls: {
