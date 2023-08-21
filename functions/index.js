@@ -25,6 +25,7 @@ const admin = require("firebase-admin");
 // local
 const {algunaOtraPregunta, getRandomResponse} = require("./response");
 const sessionVars = {};
+let fallbackContador = 0;
 
 // Configuración del servidor
 const server = express();
@@ -340,7 +341,17 @@ server.post("/amcbot", (req, res) => {
 
   // Default Fallback Intent
   function fallback(agent) {
-    agent.add("Una disculpa, no le entendí bien. ¿Podría repetírmelo?");
+    let mensaje = "";
+    fallbackContador ++;
+
+    if (fallbackContador < 3) {
+      mensaje = "Una disculpa, no le entendí bien. ¿Podría repetírmelo?";
+    } else {
+      mensaje = "Disculpe, no estoy entendiendo. Le sugiero acceder al siguiente enlace y una persona se pondrá en contacto con usted.\n\nhttps://api.whatsapp.com/send?phone=5212284982291&text=Necesito%20asesor%C3%ADa";
+      fallbackContador = 0;
+    }
+
+    agent.add(mensaje);
   }
 
   const intentMap = new Map();
@@ -389,7 +400,7 @@ server.post("/amcbot", (req, res) => {
   agent.handleRequest(intentMap);
 });
 
-const production = true; // aqui nodemon
+const production = false; // aqui nodemon
 
 if (production) {
   exports.amcbot = onRequest(server);
