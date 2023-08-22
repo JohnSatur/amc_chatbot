@@ -158,7 +158,7 @@ server.post("/amcbot", (req, res) => {
   }
 
   function informesGeneral(agent) {
-    agent.add("En ARIAS MEDICAL CLINIC atendemos las siguientes áreas:\n1. Flebología y Linfología para pacientes con varices, úlcera varicosa y linfedema.\n2.Rehabilitación y manejo ambulatorio en pacientes con problemas de columna como: lumbalgia, ciatica, dorsalgia, cervicalgia así como  también  pacientes con dolor de cuello y adormecimiento en las manos.\n3.Rehabilitación física.");
+    agent.add("En ARIAS MEDICAL CLINIC atendemos las siguientes áreas:\n\n👉 Flebología y Linfología para pacientes con varices, úlcera varicosa y linfedema.\n\n👉 Rehabilitación y manejo ambulatorio en pacientes con problemas de columna como: lumbalgia, ciatica, dorsalgia, cervicalgia así como  también  pacientes con dolor de cuello y adormecimiento en las manos.\n\n👉 Rehabilitación física.");
   }
 
   function informesCausasVarices(agent) {
