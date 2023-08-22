@@ -99,7 +99,9 @@ server.post("/amcbot", (req, res) => {
   }
 
   function ciudad(agent) {
-    agent.add("Muchas gracias, ¿cómo puedo ayudarle?");
+    agent.add("Muchas gracias por escribirnos de "+agent.parameters["location"].city);
+    agent.add("¿Cómo puedo ayudarle?");
+
     sessionVars.ciudad = agent.parameters["location"].city;
   }
 
@@ -400,7 +402,7 @@ server.post("/amcbot", (req, res) => {
   agent.handleRequest(intentMap);
 });
 
-const production = false; // aqui nodemon
+const production = true; // aqui nodemon
 
 if (production) {
   exports.amcbot = onRequest(server);
