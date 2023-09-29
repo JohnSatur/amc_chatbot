@@ -83,7 +83,7 @@ server.post("/amcbot", (req, res) => {
 
   function PruebaWindowsLocation(agent) {
     agent.add("Claro que sí. Para hablar con el doctor, por favor ingrese al siguiente enlace: ");
-    agent.add("https://api.whatsapp.com/send?phone=5212284982291&text=Necesito%20asesor%C3%ADa");
+    agent.add("https://api.whatsapp.com/send?phone=59168184000&text=Quisiera%20Hablar%20Con%20Alguien%C3%ADa");
   }
 
   // Default Welcome Intent
@@ -110,7 +110,7 @@ server.post("/amcbot", (req, res) => {
   }
 
   function dudasTratamiento(agent) {
-    agent.add("En Arias Medical Clinic hacemos tratamientos de:\n**1.** Rehabilitación vascular\n**2.** Rehabilitación de columna\n**3.** Flebología\n**4.** Linfología");
+    agent.add("En Arias Medical Clinic hacemos tratamientos de:\n\n👉 Rehabilitación vascular\n\n👉 Rehabilitación de columna\n\n👉 Flebología\n\n👉 Linfología");
     agent.add(algunaOtraPregunta());
   }
 
@@ -190,7 +190,7 @@ server.post("/amcbot", (req, res) => {
   }
 
   function informesEspecialidadMedicos(agent) {
-    agent.add("Le sugiero buscar al doctor Luis René Arias Villarroel en Google.");
+    agent.add("Son médicos cirujanos especializados en rehabilitación física y vascular con larga trayectoria en flebología y linfología. Le sugiero buscar al doctor Luis René Arias Villarroel en Google.");
     agent.add("**https://www.google.com/search?q=luis+ren%C3%A9+arias+villarroel**");
     agent.add(algunaOtraPregunta());
   }
@@ -237,7 +237,7 @@ server.post("/amcbot", (req, res) => {
 
   // Dar precio de acuerdo al lugar de donde nos escriba
   function informesPrecioConsulta(agent) {
-    agent.add("El precio de la consulta es de $750 MXN. Incluye un estudio Doppler y de Transiluminación.");
+    agent.add("El precio de la consulta es de $1500 MXN o $200 BOB. Incluye un estudio Doppler y de Transiluminación.");
     agent.add("Le gustaría agendar una cita");
   }
 
@@ -279,7 +279,7 @@ server.post("/amcbot", (req, res) => {
 
   // Mostrar una lista de las clínicas y devolver la ubicación con Google Maps de acuerdo a eso
   function informesUbicacionClinicas(agent) {
-    agent.add("Por favor, seleccione una clínica: \n 1-Xalapa\n 2-Boca\n 3-Puebla");
+    agent.add("Por favor, indique una clínica: \n 1-Xalapa\n 2-Boca\n 3-Puebla\n 4-Cochabamba\n 5-Santa Cruz\n");
 
     agent.context.set({
       name: "esperando-clinica",
@@ -307,6 +307,19 @@ server.post("/amcbot", (req, res) => {
 
     agent.add("Anillo Perif. Ecológico 3507 Torre 1 piso 9 consultorio 917 Tlaxcalancingo, 72821 Puebla, Pue");
     agent.add("https://goo.gl/maps/XCFNNwunKBFHp8Hr5");
+  }
+
+  function ubicacionCochabamba(agent) {
+    agent.context.get("esperando-clinica");
+
+    agent.add("Calle Colombia E-950 Esquina, C. 16 de Julio, Cochabamba, Bolivia");
+    agent.add("https://goo.gl/maps/BUXdEVHDfaeqMpdDA");
+  }
+
+  function ubicacionSantacruz(agent) {
+    agent.context.get("esperando-clinica");
+
+    agent.add("Centro médico niño Jesús. Av. Cañoto sexto piso consultorio 609. Santa Cruz de la Sierra.");
   }
 
   function especialidadLumbalgia(agent) {
@@ -338,7 +351,7 @@ server.post("/amcbot", (req, res) => {
   // Enviar correo al doctor para notificar que alguién quiere agendar cita
   function agendarCita(agent) {
     agent.add("Claro que sí. Para hablar con el doctor, por favor ingrese al siguiente enlace: ");
-    agent.add("https://api.whatsapp.com/send?phone=5212284982291&text=Necesito%20asesor%C3%ADa");
+    agent.add("https://api.whatsapp.com/send?phone=59168184000&text=Quisiera%20Hablar%20Con%20Alguien");
   }
 
   // Default Fallback Intent
@@ -349,7 +362,7 @@ server.post("/amcbot", (req, res) => {
     if (fallbackContador < 3) {
       mensaje = "Una disculpa, no le entendí bien. ¿Podría repetírmelo?";
     } else {
-      mensaje = "Disculpe, no estoy entendiendo. Le sugiero acceder al siguiente enlace y una persona se pondrá en contacto con usted.\n\nhttps://api.whatsapp.com/send?phone=5212284982291&text=Necesito%20asesor%C3%ADa";
+      mensaje = "Disculpe, no estoy entendiendo. Le sugiero acceder al siguiente enlace y una persona se pondrá en contacto con usted.\n\nhttps://api.whatsapp.com/send?phone=59168184000&text=Quisiera%20Hablar%20Con%20Alguien";
       fallbackContador = 0;
     }
 
@@ -393,6 +406,8 @@ server.post("/amcbot", (req, res) => {
   intentMap.set("informesUbicacionClinicas - boca", ubicacionBoca);
   intentMap.set("informesUbicacionClinicas - xalapa", ubicacionXalapa);
   intentMap.set("informesUbicacionClinicas - puebla", ubicacionPuebla);
+  intentMap.set("informesUbicacionClinicas - Cochabamba", ubicacionCochabamba);
+  intentMap.set("informesUbicacionClinicas - santacruz", ubicacionSantacruz);
   intentMap.set("especialidadLumbalgia", especialidadLumbalgia);
   intentMap.set("pacienteConPadecimientoValoracion", pacienteConPadecimientoValoracion);
   intentMap.set("padecimientosNoAtendibles", padecimientosNoAtendibles);
